@@ -1,0 +1,12 @@
+{
+    "id": 1,
+    "nome": "Alemão para Brasileiros",
+    "estilo": "Rock",
+    "descricao": "Curso de alemão com músicas de rock.",
+    "dataInicio": "2023-09-10",
+    "aulas": [
+      { "nome": "Lição 1", "duracao": 300, "arquivo": "lição1.mp3" },
+      { "nome": "Lição 2", "duracao": 320, "arquivo": "lição2.mp3" }
+    ]
+  }
+  

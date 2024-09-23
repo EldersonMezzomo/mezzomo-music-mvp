@@ -1,4 +1,14 @@
-const { defineConfig } = require('@vue/cli-service')
+const { defineConfig } = require('@vue/cli-service');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
 module.exports = defineConfig({
-  transpileDependencies: true
-})
+  configureWebpack: {
+    plugins: [
+      new CopyWebpackPlugin({
+        patterns: [
+          { from: 'acervo', to: 'acervo' } // Copia a pasta 'acervo' para 'dist/acervo'
+        ],
+      }),
+    ],
+  },
+});

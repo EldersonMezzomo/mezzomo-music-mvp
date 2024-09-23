@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Oxygen:wght@300;400;700&display=swap');
+
+
+:root {
+  --primary-color: #FF2800;
+  --primary-color-rgb: 255, 40, 0;
+  --secondary-color: #ffffff;
+  --background-color: #000000;
+  --background-color-transp-black: rgba(0, 0, 0, 0.4);
+  --background-color-transp-gray: rgba(255, 255, 255, 0.09);
+  --padding-lateral: 40px;
+
+  /* Variáveis de fonte */
+  --font-oxygen: 'Oxygen', sans-serif;
+  --font-nunito-sans: 'Nunito Sans', sans-serif;
+}

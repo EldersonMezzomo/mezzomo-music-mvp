@@ -1,19 +1,20 @@
 <template>
   <div id="app">
+    <MainBackground />
     <router-view />
   </div>
 </template>
 
 <script>
+import MainBackground from '@/components/MainBackground.vue';
+
 export default {
-  name: 'App',
+  components: {
+    MainBackground
+  }
 };
 </script>
 
 <style>
-body {
-  background-color: #000000;
-  font-family: 'Arial', sans-serif;
-  color: white;
-}
+/* Adicione aqui os estilos globais */
 </style>

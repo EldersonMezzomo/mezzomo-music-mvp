@@ -21,8 +21,20 @@
       />
       <span>{{ formatTime(duration) }}</span>
     </div>
+    <!-- Hidden Audio Element -->
+    <audio
+      :src="src"
+      @loadedmetadata="atualizarDuracao"
+      @timeupdate="updateCurrentTime"
+      @play="onPlay"
+      @pause="onPause"
+      @ended="onEnded"
+    ></audio>
   </div>
 </template>
+
+
+
 
 <script>
 export default {
@@ -107,11 +119,15 @@ export default {
     forward() {
       this.$emit('forward');
     },
-    formatTime(time) {
-      const minutes = Math.floor(time / 60);
-      const seconds = time % 60;
-      return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    atualizarDuracao(event) {
+      this.duration = Math.floor(event.target.duration); // Update the real duration
+      this.$emit('update-duracao', this.duration); // Emit the duration to the parent component
     },
+    formatTime(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const secondsRemaining = Math.floor(seconds % 60);
+      return `${minutes}:${secondsRemaining < 10 ? '0' + secondsRemaining : secondsRemaining}`;
+    }
   },
   watch: {
     src(newSrc) {

@@ -10,8 +10,8 @@ const routes = [
   { path: '/', name: 'TelaInicio', component: TelaInicio },
   { path: '/curso/:id', name: 'TelaCurso', component: TelaCurso },
   { path: '/trilha/:id', name: 'TelaTrilha', component: TelaTrilha },
-  { path: '/letra/:id', name: 'TelaLetra', component: TelaLetra },
-  { path: '/player/:id', name: 'TelaPlayer', component: TelaPlayer },
+  { path: '/player/:cursoId/:aulaId', name: 'TelaPlayer', component: TelaPlayer,
+    children: [ { path: 'letra', name: 'TelaLetra', component: TelaLetra, }, ], },
   { path: '/quiz/:id', name: 'TelaQuiz', component: TelaQuiz },
 ];
 

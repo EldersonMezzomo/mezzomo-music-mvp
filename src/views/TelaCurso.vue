@@ -19,6 +19,7 @@
       <div class="curso-info">
         <h1 class="curso-nome">{{ curso.nome }}</h1>
         <p class="curso-estilo">{{ curso.estilo }}</p>
+        <p class="curso-idioma">Idioma: {{ curso.idioma }}</p> <!-- Novo campo de idioma -->
         <p class="curso-descricao">{{ curso.descricao }}</p>
         <p class="curso-duracao">Duração total: {{ duracaoTotal }}</p>
         <p class="curso-data-inicio" v-if="curso.dataInicio">
@@ -28,25 +29,25 @@
         <!-- Botões de Ação -->
         <div class="curso-acoes">
           <div class="curso-acao" @click="baixarAudios">
-        <i class="fas fa-download"></i>
-        <span>Download</span>
-      </div>
-      <div class="curso-acao" @click="compartilharCurso">
-        <i class="fas fa-share-alt"></i>
-        <span>Compartilhar</span>
-      </div>
-      <div class="curso-acao" @click="rolarParaComentarios">
-        <i class="fas fa-comments"></i>
-        <span>Comentários</span>
-      </div>
-      <div class="curso-acao" @click="acessarCertificado" :disabled="!certificadoDisponivel">
-        <i class="fas fa-flag-checkered"></i> <!-- Ícone de bandeira quadriculada -->
-        <span>Certificado</span>
-      </div>
-      <div class="curso-acao" @click="acessarQuiz">
-        <i class="fas fa-question-circle"></i>
-        <span>Quiz</span>
-      </div>
+            <i class="fas fa-download"></i>
+            <span>Download</span>
+          </div>
+          <div class="curso-acao" @click="compartilharCurso">
+            <i class="fas fa-share-alt"></i>
+            <span>Compartilhar</span>
+          </div>
+          <div class="curso-acao" @click="rolarParaComentarios">
+            <i class="fas fa-comments"></i>
+            <span>Comentários</span>
+          </div>
+          <div class="curso-acao" @click="acessarCertificado" :disabled="!certificadoDisponivel">
+            <i class="fas fa-flag-checkered"></i> <!-- Ícone de bandeira quadriculada -->
+            <span>Certificado</span>
+          </div>
+          <div class="curso-acao" @click="acessarQuiz">
+            <i class="fas fa-question-circle"></i>
+            <span>Quiz</span>
+          </div>
         </div>
       </div>
     </div>
@@ -55,23 +56,17 @@
     <div class="curso-aulas">
       <h2>Aulas</h2>
       <ul>
-        <li
-          v-for="(aula, index) in curso.aulas"
-          :key="aula.id"
-          :class="{ reproduzida: aula.reproduzida }"
-        >
-          <div class="aula-detalhes" @click="tocarAula(aula)">
-            <i class="fas fa-play"></i>
+        <li v-for="(aula, index) in curso.aulas" :key="aula.id"
+          :class="{ reproduzida: aula.reproduzida, executando: aula.executando }">
+          <div class="aula-detalhes">
+            <!-- Adiciona o AudioPlayer para cada aula -->
+            <AudioPlayer :ref="(el) => { aula.audioPlayer = el; }" :src="aula.arquivo" :autoplay="false"
+              :showRewind="false" :showForward="false" :showProgress="false" @play="onPlay(aula)" @pause="onPause(aula)"
+              @ended="onEnded(aula)" />
             <span>{{ index + 1 }}. {{ aula.nome }}</span>
           </div>
-          <div class="aula-acoes">
-            <i
-              :class="[
-                'fas',
-                aula.baixada ? 'fa-check-circle baixado' : 'fa-download'
-              ]"
-              @click.stop="baixarAula(aula)"
-            ></i>
+          <div class="aula-duracao">
+            <span>{{ formatarDuracao(aula.duracao) }}</span>
           </div>
         </li>
       </ul>
@@ -103,6 +98,7 @@ export default {
       },
       duracaoTotal: '0h 0min',
       certificadoDisponivel: false,
+      currentAudioPlayer: null,
     };
   },
   created() {
@@ -123,18 +119,18 @@ export default {
         this.curso.nome = dadosCurso.nome;
         this.curso.estilo = dadosCurso.estilo;
         this.curso.descricao = dadosCurso.descricao;
+        this.curso.idioma = dadosCurso.idioma; // Adiciona o idioma aqui
         this.curso.capa = `/acervo/cursos/${this.curso.id}/cover.webp`;
-
-        console.log('Caminho da capa:', this.curso.capa);  // <-- Verifica o valor aqui
-
         this.curso.dataInicio = dadosCurso.dataInicio || null;
+
+
         this.curso.aulas = dadosCurso.aulas.map((aula, index) => ({
           id: aula.id || index + 1,
           nome: aula.nome,
           duracao: aula.duracao, // duração em segundos
           reproduzida: aula.reproduzida || false,
           baixada: aula.baixada || false,
-          arquivo: `/acervo/cursos/${this.curso.id}/audios/${aula.arquivo}`,
+          arquivo: `/acervo/cursos/${this.curso.id}/${aula.arquivo}`, // Certifica-se de usar o nome do arquivo MP3
         }));
 
         this.calcularDuracaoTotal();
@@ -192,6 +188,37 @@ export default {
       aula.baixada = true;
       alert(`Aula "${aula.nome}" baixada com sucesso!`);
     },
+    onPlay(aula) {
+      // Pause any currently playing audio
+      if (this.currentAudioPlayer && this.currentAudioPlayer !== aula.audioPlayer) {
+        this.currentAudioPlayer.pauseAudio();
+      }
+      // Set the current audio player
+      this.currentAudioPlayer = aula.audioPlayer;
+      aula.executando = true;
+    },
+    onPause(aula) {
+      aula.executando = false;
+    },
+    onEnded(aula) {
+      aula.executando = false;
+    },
+    formatarDuracao(segundos) {
+      const minutos = Math.floor(segundos / 60);
+      const segundosRestantes = segundos % 60;
+
+      // Garantir que os segundos sejam exibidos com dois dígitos
+      const segundosFormatados = segundosRestantes < 10 ? `0${segundosRestantes}` : segundosRestantes;
+
+      // Retornar no formato "mm:ss"
+      return `${minutos}:${segundosFormatados}`;
+    },
+  },
+  mounted() {
+    // Initialize the audio players
+    this.curso.aulas.forEach((aula) => {
+      aula.audioPlayer = null;
+    });
   },
 };
 </script>
@@ -216,7 +243,8 @@ export default {
 }
 
 .btn-voltar:hover {
-  color: var(--primary-color); /* Muda para a cor vermelha ao passar o mouse */
+  color: var(--primary-color);
+  /* Muda para a cor vermelha ao passar o mouse */
 }
 
 .curso-detalhes {
@@ -302,7 +330,8 @@ export default {
 }
 
 .curso-acao:hover {
-  color: var(--primary-color); /* Torna o ícone e o texto vermelhos ao passar o mouse */
+  color: var(--primary-color);
+  /* Torna o ícone e o texto vermelhos ao passar o mouse */
 }
 
 
@@ -310,7 +339,7 @@ export default {
   margin-bottom: 30px;
   margin-top: 50px;
   background-color: var(--background-color-transp-black);
-  }
+}
 
 .curso-aulas h2 {
   font-family: var(--font-oxygen);
@@ -336,7 +365,8 @@ export default {
 }
 
 .curso-aulas li:hover {
-  border: 2px solid var(--primary-color); /* Borda vermelha ao passar o mouse */
+  border: 2px solid var(--primary-color);
+  /* Borda vermelha ao passar o mouse */
 }
 
 
@@ -358,9 +388,14 @@ export default {
   cursor: pointer;
 }
 
-.aula-acoes i.baixado {
-  color: var(--primary-color);
+.aula-duracao {
+  font-size: 14px;
+  color: var(--secondary-color);
+  text-align: right;
 }
+
+
+
 
 @media (max-width: 480px) {
   .tela-curso {
@@ -392,7 +427,7 @@ export default {
     justify-content: space-around;
   }
 
-    .curso-acao {
+  .curso-acao {
     margin-bottom: 10px;
     width: 80px;
   }

@@ -23,17 +23,10 @@
       Ver Letra
     </button>
     <!-- Audio Player with Controls -->
-    <AudioPlayer
-      ref="audioPlayer"
-      :src="aula.arquivo"
-      :autoplay="true"
-      :showRewind="true"
-      :showForward="true"
-      :showProgress="true"
-      @rewind="rewind"
-      @forward="forward"
-      @ended="onEnded"
-    />
+    <AudioPlayer ref="audioPlayer" :src="aula.arquivo" :autoplay="true" :showRewind="true" :showForward="true"
+      :showProgress="true" @rewind="rewind" @forward="forward" @ended="onEnded" />
+    <!-- Include router-view for nested routes -->
+    <router-view></router-view>
   </div>
 </template>
 
@@ -159,6 +152,7 @@ export default {
   from {
     transform: translateX(100%);
   }
+
   to {
     transform: translateX(-100%);
   }

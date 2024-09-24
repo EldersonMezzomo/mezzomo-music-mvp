@@ -56,13 +56,9 @@
     <div class="curso-aulas">
       <h2>Aulas</h2>
       <ul>
-        <li v-for="(aula, index) in curso.aulas" :key="aula.id"
-          :class="{ reproduzida: aula.reproduzida, executando: aula.executando }">
+        <li v-for="(aula, index) in curso.aulas" :key="aula.id" @click="tocarAula(aula)">
           <div class="aula-detalhes">
-            <!-- Adiciona o AudioPlayer para cada aula -->
-            <AudioPlayer :ref="(el) => { aula.audioPlayer = el; }" :src="aula.arquivo" :autoplay="false"
-              :showRewind="false" :showForward="false" :showProgress="false" @play="onPlay(aula)" @pause="onPause(aula)"
-              @ended="onEnded(aula)" />
+            <i class="fas fa-play"></i>
             <span>{{ index + 1 }}. {{ aula.nome }}</span>
           </div>
           <div class="aula-duracao">
@@ -72,6 +68,7 @@
       </ul>
     </div>
 
+
     <!-- Sessão de Comentários (a ser implementada posteriormente) -->
   </div>
 </template>
@@ -79,12 +76,7 @@
 
 
 <script>
-import AudioPlayer from '@/components/AudioPlayer.vue';
-
 export default {
-  components: {
-    AudioPlayer,
-  },
   data() {
     return {
       curso: {
@@ -98,7 +90,6 @@ export default {
       },
       duracaoTotal: '0h 0min',
       certificadoDisponivel: false,
-      currentAudioPlayer: null,
     };
   },
   created() {
@@ -119,10 +110,9 @@ export default {
         this.curso.nome = dadosCurso.nome;
         this.curso.estilo = dadosCurso.estilo;
         this.curso.descricao = dadosCurso.descricao;
-        this.curso.idioma = dadosCurso.idioma; // Adiciona o idioma aqui
+        this.curso.idioma = dadosCurso.idioma;
         this.curso.capa = `/acervo/cursos/${this.curso.id}/cover.webp`;
         this.curso.dataInicio = dadosCurso.dataInicio || null;
-
 
         this.curso.aulas = dadosCurso.aulas.map((aula, index) => ({
           id: aula.id || index + 1,
@@ -130,7 +120,7 @@ export default {
           duracao: aula.duracao, // duração em segundos
           reproduzida: aula.reproduzida || false,
           baixada: aula.baixada || false,
-          arquivo: `/acervo/cursos/${this.curso.id}/${aula.arquivo}`, // Certifica-se de usar o nome do arquivo MP3
+          arquivo: `/acervo/cursos/${this.curso.id}/${aula.arquivo}`,
         }));
 
         this.calcularDuracaoTotal();
@@ -149,79 +139,47 @@ export default {
       this.duracaoTotal = `${horas}h ${minutos}min`;
     },
     verificarCertificadoDisponivel() {
-      // Implementar lógica para verificar se o certificado está disponível
       this.certificadoDisponivel = false;
     },
     adicionarATrilha() {
-      // Implementar a lógica para adicionar o curso à "Minha Trilha"
       alert('Curso adicionado à Minha Trilha!');
     },
     baixarAudios() {
-      // Implementar a lógica para baixar todos os áudios do curso
       alert('Download iniciado para todos os áudios do curso.');
     },
     compartilharCurso() {
-      // Implementar a lógica para compartilhar o curso
       alert('Compartilhar curso (funcionalidade em desenvolvimento).');
     },
     rolarParaComentarios() {
-      // Implementar a lógica para rolar até a sessão de comentários
       alert('Rolando para a sessão de comentários.');
     },
     acessarCertificado() {
       if (this.certificadoDisponivel) {
-        // Redirecionar para a tela de certificado
         this.$router.push({ path: `/certificado/${this.curso.id}` });
       }
     },
     acessarQuiz() {
-      // Redirecionar para a tela de quiz do curso
       this.$router.push({ path: `/quiz/${this.curso.id}` });
     },
     tocarAula(aula) {
-      // Implementar a lógica para tocar a aula selecionada
-      alert(`Reproduzindo aula: ${aula.nome}`);
-      // Aqui você pode iniciar a reprodução e exibir os controles no rodapé
-    },
-    baixarAula(aula) {
-      // Implementar a lógica para baixar a aula
-      aula.baixada = true;
-      alert(`Aula "${aula.nome}" baixada com sucesso!`);
-    },
-    onPlay(aula) {
-      // Pause any currently playing audio
-      if (this.currentAudioPlayer && this.currentAudioPlayer !== aula.audioPlayer) {
-        this.currentAudioPlayer.pauseAudio();
-      }
-      // Set the current audio player
-      this.currentAudioPlayer = aula.audioPlayer;
-      aula.executando = true;
-    },
-    onPause(aula) {
-      aula.executando = false;
-    },
-    onEnded(aula) {
-      aula.executando = false;
+      this.$router.push({
+        name: 'TelaPlayer',
+        params: {
+          cursoId: this.curso.id,
+          aulaId: aula.id,
+        },
+      });
     },
     formatarDuracao(segundos) {
       const minutos = Math.floor(segundos / 60);
       const segundosRestantes = segundos % 60;
-
-      // Garantir que os segundos sejam exibidos com dois dígitos
       const segundosFormatados = segundosRestantes < 10 ? `0${segundosRestantes}` : segundosRestantes;
-
-      // Retornar no formato "mm:ss"
       return `${minutos}:${segundosFormatados}`;
     },
   },
-  mounted() {
-    // Initialize the audio players
-    this.curso.aulas.forEach((aula) => {
-      aula.audioPlayer = null;
-    });
-  },
 };
 </script>
+
 
 
 

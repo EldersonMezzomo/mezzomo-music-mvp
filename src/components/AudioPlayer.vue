@@ -1,6 +1,17 @@
 <!-- AudioPlayer.vue -->
 <template>
   <div class="audio-player">
+    <!-- Hidden Audio Element -->
+    <audio
+      ref="audioElement"
+      :src="src"
+      @loadedmetadata="onLoadedMetadata"
+      @timeupdate="onTimeUpdate"
+      @play="onPlay"
+      @pause="onPause"
+      @ended="onEnded"
+    ></audio>
+
     <!-- Controls -->
     <div class="controls">
       <button @click="rewind" v-if="showRewind"><i class="fas fa-backward"></i></button>
@@ -9,9 +20,9 @@
       </button>
       <button @click="forward" v-if="showForward"><i class="fas fa-forward"></i></button>
     </div>
+
     <!-- Progress Bar -->
     <div class="progress-container" v-if="showProgress">
-      <span>{{ formatTime(currentTime) }}</span>
       <input
         type="range"
         min="0"
@@ -19,22 +30,15 @@
         v-model="currentTime"
         @input="seek"
       />
-      <span>{{ formatTime(duration) }}</span>
     </div>
-    <!-- Hidden Audio Element -->
-    <audio
-      :src="src"
-      @loadedmetadata="atualizarDuracao"
-      @timeupdate="updateCurrentTime"
-      @play="onPlay"
-      @pause="onPause"
-      @ended="onEnded"
-    ></audio>
+
+    <!-- Times -->
+    <div class="time-container" v-if="showProgress">
+      <span class="current-time">{{ formatTime(currentTime) }}</span>
+      <span class="total-time">{{ formatTime(duration) }}</span>
+    </div>
   </div>
 </template>
-
-
-
 
 <script>
 export default {
@@ -63,53 +67,88 @@ export default {
   },
   data() {
     return {
-      audio: null,
       isPlaying: false,
       duration: 0,
       currentTime: 0,
-      updateInterval: null,
     };
   },
   mounted() {
-    this.audio = new Audio(this.src);
-    this.audio.addEventListener('loadedmetadata', this.onLoadedMetadata);
-    this.audio.addEventListener('timeupdate', this.onTimeUpdate);
-    this.audio.addEventListener('ended', this.onEnded);
+    const audio = this.$refs.audioElement;
+
+    // Adicionar eventos
+    audio.addEventListener('loadedmetadata', this.onLoadedMetadata);
+    audio.addEventListener('timeupdate', this.onTimeUpdate);
+    audio.addEventListener('ended', this.onEnded);
+    audio.addEventListener('play', this.onPlay);
+    audio.addEventListener('pause', this.onPause);
+
+    // Iniciar reprodução se autoplay estiver habilitado
     if (this.autoplay) {
-      this.playAudio();
+      audio.play().catch((error) => {
+        console.error('Erro ao tentar reproduzir o áudio:', error);
+      });
     }
   },
   beforeUnmount() {
-    this.pauseAudio();
-    this.audio.removeEventListener('loadedmetadata', this.onLoadedMetadata);
-    this.audio.removeEventListener('timeupdate', this.onTimeUpdate);
-    this.audio.removeEventListener('ended', this.onEnded);
-    this.audio = null;
+    const audio = this.$refs.audioElement;
+    if (audio) {
+      audio.removeEventListener('loadedmetadata', this.onLoadedMetadata);
+      audio.removeEventListener('timeupdate', this.onTimeUpdate);
+      audio.removeEventListener('ended', this.onEnded);
+      audio.removeEventListener('play', this.onPlay);
+      audio.removeEventListener('pause', this.onPause);
+    }
   },
   methods: {
     onLoadedMetadata() {
-      this.duration = Math.floor(this.audio.duration);
+      const audio = this.$refs.audioElement;
+      if (!audio) return;
+      this.duration = Math.floor(audio.duration);
     },
     onTimeUpdate() {
-      this.currentTime = Math.floor(this.audio.currentTime);
+      const audio = this.$refs.audioElement;
+      if (!audio) return;
+      this.currentTime = audio.currentTime;
+      // Emitir o currentTime para o componente pai
+      this.$emit('timeupdate', this.currentTime);
+    },
+    onPlay() {
+      const audio = this.$refs.audioElement;
+      if (!audio) return;
+      this.isPlaying = true;
+      this.$emit('play');
+    },
+    onPause() {
+      const audio = this.$refs.audioElement;
+      if (!audio) return;
+      this.isPlaying = false;
+      this.$emit('pause');
     },
     togglePlay() {
       this.isPlaying ? this.pauseAudio() : this.playAudio();
     },
     playAudio() {
-      this.audio.play();
-      this.isPlaying = true;
-      this.$emit('play');
+      const audio = this.$refs.audioElement;
+      if (!audio) return;
+      audio.play().catch((error) => {
+        console.error('Erro ao tentar reproduzir o áudio:', error);
+      });
     },
     pauseAudio() {
-      this.audio.pause();
-      this.isPlaying = false;
-      this.$emit('pause');
+      const audio = this.$refs.audioElement;
+      if (!audio) return;
+      audio.pause();
     },
-    seek() {
-      this.audio.currentTime = this.currentTime;
+    seek(event) {
+      const newTime = event.target.value;
+      const audio = this.$refs.audioElement;
+      if (!audio) return;
+      audio.currentTime = newTime;
+      this.currentTime = newTime;
     },
     onEnded() {
+      const audio = this.$refs.audioElement;
+      if (!audio) return;
       this.isPlaying = false;
       this.$emit('ended');
     },
@@ -119,25 +158,27 @@ export default {
     forward() {
       this.$emit('forward');
     },
-    atualizarDuracao(event) {
-      this.duration = Math.floor(event.target.duration); // Update the real duration
-      this.$emit('update-duracao', this.duration); // Emit the duration to the parent component
-    },
     formatTime(seconds) {
       const minutes = Math.floor(seconds / 60);
       const secondsRemaining = Math.floor(seconds % 60);
       return `${minutes}:${secondsRemaining < 10 ? '0' + secondsRemaining : secondsRemaining}`;
-    }
+    },
   },
   watch: {
-    src(newSrc) {
-      if (this.audio) {
-        this.pauseAudio();
-        this.audio.src = newSrc;
-        this.audio.load();
-        if (this.autoplay) {
-          this.playAudio();
-        }
+    src() {
+      const audio = this.$refs.audioElement;
+      if (!audio) return;
+      audio.src = this.src;
+      audio.load();
+      // Reiniciar os estados
+      this.isPlaying = false;
+      this.duration = 0;
+      this.currentTime = 0;
+      // Iniciar reprodução se autoplay estiver habilitado
+      if (this.autoplay) {
+        audio.play().catch((error) => {
+          console.error('Erro ao tentar reproduzir o áudio:', error);
+        });
       }
     },
   },
@@ -145,6 +186,8 @@ export default {
 </script>
 
 <style scoped>
+@import "@/assets/css/variables.css";
+
 .audio-player {
   display: flex;
   flex-direction: column;
@@ -161,7 +204,7 @@ export default {
   border: none;
   color: var(--secondary-color);
   font-size: 24px;
-  margin: 0 10px;
+  margin: 0 20px;
   cursor: pointer;
 }
 
@@ -169,21 +212,41 @@ export default {
   color: var(--primary-color);
 }
 
-.progress-container {
+.controls button:nth-child(2) {
+  background-color: rgba(255, 255, 255, 0.2); /* Fundo transparente */
+  border-radius: 50%; /* Forma circular */
+  width: 60px; /* Largura do círculo */
+  height: 60px; /* Altura do círculo */
   display: flex;
   align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.controls button:nth-child(2):hover {
+  background-color: rgba(255, 255, 255, 0.4); /* Fundo ao passar o mouse */
+}
+
+.progress-container {
   width: 100%;
-  max-width: 500px;
   margin-top: 10px;
 }
 
-.progress-container span {
-  width: 40px;
-  text-align: center;
+.progress-container input[type='range'] {
+  width: 100%;
+  margin: 0;
 }
 
-.progress-container input[type='range'] {
-  flex: 1;
-  margin: 0 10px;
+.time-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.current-time,
+.total-time {
+  color: var(--primary-color);
+  font-size: 12px;
 }
 </style>

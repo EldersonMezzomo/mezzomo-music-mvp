@@ -1,21 +1,59 @@
 {
-    "curso": "The Joshua Tree",
-    "quiz": [
+  "quiz": {
+    "curso": "Aprendendo a Aprender",
+    "perguntas": [
       {
-        "pergunta": "Qual o nome da primeira faixa do álbum?",
-        "respostas": ["With or Without You", "Where the Streets Have No Name"],
-        "correta": "Where the Streets Have No Name"
+        "id": 1,
+        "pergunta": "O que é metacognição?",
+        "opcoes": [
+          {
+            "id": 1,
+            "texto": "O ato de esquecer rapidamente",
+            "correta": false
+          },
+          {
+            "id": 2,
+            "texto": "A capacidade de pensar sobre o próprio pensamento",
+            "correta": true
+          },
+          {
+            "id": 3,
+            "texto": "A memorização rápida de conteúdos",
+            "correta": false
+          },
+          {
+            "id": 4,
+            "texto": "Estudar por mais de 4 horas seguidas",
+            "correta": false
+          }
+        ]
       },
       {
-        "pergunta": "Qual o ano de lançamento do álbum?",
-        "respostas": ["1987", "1991"],
-        "correta": "1987"
-      },
-      {
-        "pergunta": "Qual banda lançou o álbum 'The Joshua Tree'?",
-        "respostas": ["U2", "Coldplay"],
-        "correta": "U2"
+        "id": 2,
+        "pergunta": "Qual dessas estratégias melhora a retenção de informações?",
+        "opcoes": [
+          {
+            "id": 1,
+            "texto": "Revisar o conteúdo uma única vez",
+            "correta": false
+          },
+          {
+            "id": 2,
+            "texto": "Espaçar as revisões ao longo do tempo",
+            "correta": true
+          },
+          {
+            "id": 3,
+            "texto": "Estudar só na véspera da prova",
+            "correta": false
+          },
+          {
+            "id": 4,
+            "texto": "Escrever o conteúdo sem rever",
+            "correta": false
+          }
+        ]
       }
     ]
   }
-  
+}

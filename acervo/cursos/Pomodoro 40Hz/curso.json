@@ -1,13 +1,14 @@
 {
   "id": 9,
   "nome": "Pomodoro 40Hz",
-  "estilo": "Rock",
+  "estilo": "Eletrônico",
   "descricao": "25 minutos de som binaural a 40Hz para concentração intensa, seguido de 5 minutos de música relaxante para pausa.",
-  "dataInicio": "2023-09-10",
+  "idioma": "Instrumental",
+  "dataInicio": "2023-09-28",
   "aulas": [
     {
       "id": 1,
-      "nome": "Aula 1 - Apresentação",
+      "nome": "Pomodoro 40Hz",
       "duracao": 1800,
       "arquivo": "001.mp3"
     }

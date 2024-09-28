@@ -1,21 +1,59 @@
 {
-    "curso": "The Joshua Tree",
-    "quiz": [
+  "quiz": {
+    "curso": "Alemão para Brasileiros",
+    "perguntas": [
       {
-        "pergunta": "Qual o nome da primeira faixa do álbum?",
-        "respostas": ["With or Without You", "Where the Streets Have No Name"],
-        "correta": "Where the Streets Have No Name"
+        "id": 1,
+        "pergunta": "Como se diz 'boa tarde' em alemão?",
+        "opcoes": [
+          {
+            "id": 1,
+            "texto": "Guten Abend",
+            "correta": false
+          },
+          {
+            "id": 2,
+            "texto": "Guten Tag",
+            "correta": true
+          },
+          {
+            "id": 3,
+            "texto": "Gute Nacht",
+            "correta": false
+          },
+          {
+            "id": 4,
+            "texto": "Hallo",
+            "correta": false
+          }
+        ]
       },
       {
-        "pergunta": "Qual o ano de lançamento do álbum?",
-        "respostas": ["1987", "1991"],
-        "correta": "1987"
-      },
-      {
-        "pergunta": "Qual banda lançou o álbum 'The Joshua Tree'?",
-        "respostas": ["U2", "Coldplay"],
-        "correta": "U2"
+        "id": 2,
+        "pergunta": "Qual é a tradução de 'Wie geht's?'?",
+        "opcoes": [
+          {
+            "id": 1,
+            "texto": "Onde você mora?",
+            "correta": false
+          },
+          {
+            "id": 2,
+            "texto": "Como você está?",
+            "correta": true
+          },
+          {
+            "id": 3,
+            "texto": "Qual é o seu nome?",
+            "correta": false
+          },
+          {
+            "id": 4,
+            "texto": "O que você faz?",
+            "correta": false
+          }
+        ]
       }
     ]
   }
-  
+}

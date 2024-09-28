@@ -1,16 +1,17 @@
+<!-- MainCarrossel.vue -->
 <template>
   <div class="carrossel-container">
     <div class="carrossel-header">
       <h2>{{ titulo }}</h2>
       <div class="arrows">
-        <!-- Ícone de rolar para a esquerda -->
+
         <button class="arrow left" @click="scrollLeft">
-          <i class="fas fa-chevron-left"></i>
+          <i class="fa-solid fa-chevron-left"></i>
         </button>
-        <!-- Ícone de rolar para a direita -->
         <button class="arrow right" @click="scrollRight">
-          <i class="fas fa-chevron-right"></i>
+          <i class="fa-solid fa-chevron-right"></i>
         </button>
+
       </div>
     </div>
 
@@ -22,7 +23,6 @@
     </div>
   </div>
 </template>
-
 
 
 
@@ -40,14 +40,14 @@ export default {
     // Função para rolar o carrossel para a esquerda
     scrollLeft() {
       this.$refs.carousel.scrollBy({
-        left: -200, // Valor ajustável para a quantidade de rolagem
+        left: -200,
         behavior: "smooth"
       });
     },
     // Função para rolar o carrossel para a direita
     scrollRight() {
       this.$refs.carousel.scrollBy({
-        left: 200, // Valor ajustável para a quantidade de rolagem
+        left: 200,
         behavior: "smooth"
       });
     }
@@ -58,87 +58,72 @@ export default {
 
 
 
-
 <style scoped>
 @import "@/assets/css/variables.css";
 
 .carrossel-container {
-  margin-bottom: 30px;
-  background-color: var(--background-color-transp-black);
-  /* Fundo com transparência preta */
+  margin: calc(var(--padding-default) * 0.75); /* 30px */
+  background-color: rgba(var(--color-dark-rgb), 0.4);
   border-radius: 10px;
   position: relative;
-  /* Necessário para os botões de rolagem serem posicionados corretamente */
 }
 
-/* Cabeçalho com título e setas */
 .carrossel-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 5px;
+  padding: calc(var(--padding-default) * 0.375); /* 15px */
 }
 
-/* Estilo dos títulos */
 .carrossel-container h2 {
   font-family: var(--font-oxygen);
-  font-size: 24px;
-  color: var(--secondary-color);
-  /* Cor branca */
+  font-size: var(--size-xlarge-2);
+  color: var(--color-secondary);
 }
 
-/* Container dos botões de seta */
 .arrows {
   display: flex;
   gap: 10px;
 }
 
-/* Estilos para as setas de rolagem */
 .arrow {
   background: none;
   border: none;
-  color: var(--secondary-color);
-  /* Cor branca */
-  font-size: 24px;
+  color: var(--color-secondary);
+  font-size: var(--size-xlarge-2);
   cursor: pointer;
   padding: 5px;
 }
 
 .arrow:hover {
-  color: var(--primary-color);
-  /* Cor primária ao passar o mouse */
+  color: var(--color-primary);
 }
 
-/* Estilo do carrossel */
 .carousel {
   display: flex;
   overflow-x: auto;
   scroll-behavior: smooth;
   scrollbar-width: none;
-  /* Para navegadores Firefox */
   -ms-overflow-style: none;
-  /* Para Internet Explorer e Edge */
+  -webkit-overflow-scrolling: touch;
 }
 
 .carousel::-webkit-scrollbar {
   display: none;
-  /* Para navegadores baseados em Webkit (Chrome, Safari) */
 }
 
 .item {
   flex: 0 0 auto;
   width: 160px;
-  padding: 15px;
+  padding: calc(var(--padding-default) * 0.375); /* 15px */
   cursor: pointer;
   text-align: center;
   transition: background-color 0.3s ease;
-  /* Suaviza a transição do background */
 }
 
 .item:hover {
-  background-color: var(--background-color-transp-gray);
+  background-color: rgba(var(--color-secondary-rgb), 0.09);
   border-radius: 10px;
-  /* Mantém os cantos arredondados no hover */
 }
 
 .capa-img {
@@ -149,59 +134,35 @@ export default {
 
 .item p {
   font-family: var(--font-nunito-sans);
-  font-size: 14px;
-  color: var(--secondary-color);
-  margin-top: 5px;
+  font-size: var(--size-large-1);
+  color: var(--color-secondary);
+  margin-top: calc(var(--padding-default) * 0.125); /* 5px */
   transition: color 0.3s ease;
-  /* Suaviza a transição de cor */
 }
 
 .item:hover p {
-  color: var(--primary-color);
-  /* Muda para a cor primária (vermelha) ao passar o mouse */
-
-  /* Media query para telas com largura abaixo de 480px */
+  color: var(--color-primary);
 }
 
+
+
+
+/* Tablet */
+@media (max-width: 768px) {
+
+  .carousel .item {
+    width: 120px;
+  }
+}
+
+
+
+
+/* Mobile */
 @media (max-width: 480px) {
-
-  .carrossel-container h2 {
-    font-family: var(--font-oxygen);
-    font-size: 20px;
-    color: var(--secondary-color);
-    /* Cor branca */
-  }
-
-
-
-
-  .item {
-    width: 100px;
-    /* Reduz o tamanho da capa para 100px de largura */
-    padding: 10px;
-    /* Reduz o espaçamento ao redor das capas */
-  }
-
-  .capa-img {
-    width: 100px;
-    /* Garante que a capa se ajuste ao novo tamanho do item */
-    height: auto;
-    /* Mantém a proporção da imagem */
-    border-radius: 8px;
-    /* Opcional: ajusta o arredondamento dos cantos */
-  }
-
-  .item p {
-    font-size: 12px;
-    /* Reduz o tamanho da fonte dos títulos das capas */
-  }
-
-  .carousel {
-    gap: 8px;
-  }
-
-  .arrow {
-    font-size: 20px;
+  
+  .arrows {
+    display: none;
   }
 }
 </style>

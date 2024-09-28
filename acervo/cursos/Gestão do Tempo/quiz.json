@@ -1,21 +1,59 @@
 {
-    "curso": "The Joshua Tree",
-    "quiz": [
+  "quiz": {
+    "curso": "Gestão do Tempo",
+    "perguntas": [
       {
-        "pergunta": "Qual o nome da primeira faixa do álbum?",
-        "respostas": ["With or Without You", "Where the Streets Have No Name"],
-        "correta": "Where the Streets Have No Name"
+        "id": 1,
+        "pergunta": "Qual é o princípio da técnica Pomodoro?",
+        "opcoes": [
+          {
+            "id": 1,
+            "texto": "Estudar sem pausas por 60 minutos",
+            "correta": false
+          },
+          {
+            "id": 2,
+            "texto": "Trabalhar por 25 minutos e fazer uma pausa curta",
+            "correta": true
+          },
+          {
+            "id": 3,
+            "texto": "Dividir o trabalho em blocos de 15 minutos",
+            "correta": false
+          },
+          {
+            "id": 4,
+            "texto": "Fazer pausas a cada 10 minutos",
+            "correta": false
+          }
+        ]
       },
       {
-        "pergunta": "Qual o ano de lançamento do álbum?",
-        "respostas": ["1987", "1991"],
-        "correta": "1987"
-      },
-      {
-        "pergunta": "Qual banda lançou o álbum 'The Joshua Tree'?",
-        "respostas": ["U2", "Coldplay"],
-        "correta": "U2"
+        "id": 2,
+        "pergunta": "Qual dessas ferramentas é usada para priorizar tarefas?",
+        "opcoes": [
+          {
+            "id": 1,
+            "texto": "Diagrama de Pareto",
+            "correta": false
+          },
+          {
+            "id": 2,
+            "texto": "Matriz de Eisenhower",
+            "correta": true
+          },
+          {
+            "id": 3,
+            "texto": "Método de Kanban",
+            "correta": false
+          },
+          {
+            "id": 4,
+            "texto": "Brainstorming",
+            "correta": false
+          }
+        ]
       }
     ]
   }
-  
+}

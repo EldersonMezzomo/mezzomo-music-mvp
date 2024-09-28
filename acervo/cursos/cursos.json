@@ -4,6 +4,10 @@
     "nome": "Alemão para Brasileiros"
   },
   {
+    "id": "Pomodoro 40Hz",
+    "nome": "Pomodoro 40Hz"
+  },
+  {
     "id": "Aprendendo a Aprender",
     "nome": "Aprendendo a Aprender"
   },
@@ -30,9 +34,5 @@
   {
     "id": "Música e Pedagogia",
     "nome": "Música e Pedagogia"
-  },
-  {
-    "id": "Pomodoro 40Hz",
-    "nome": "Pomodoro 40Hz"
   }
 ]

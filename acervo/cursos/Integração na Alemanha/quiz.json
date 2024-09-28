@@ -1,21 +1,59 @@
 {
-    "curso": "The Joshua Tree",
-    "quiz": [
+  "quiz": {
+    "curso": "Integração na Alemanha",
+    "perguntas": [
       {
-        "pergunta": "Qual o nome da primeira faixa do álbum?",
-        "respostas": ["With or Without You", "Where the Streets Have No Name"],
-        "correta": "Where the Streets Have No Name"
+        "id": 1,
+        "pergunta": "O que é o Anmeldung na Alemanha?",
+        "opcoes": [
+          {
+            "id": 1,
+            "texto": "Registro de residência",
+            "correta": true
+          },
+          {
+            "id": 2,
+            "texto": "Certificado de trabalho",
+            "correta": false
+          },
+          {
+            "id": 3,
+            "texto": "Processo de cidadania",
+            "correta": false
+          },
+          {
+            "id": 4,
+            "texto": "Inscrição para cursos",
+            "correta": false
+          }
+        ]
       },
       {
-        "pergunta": "Qual o ano de lançamento do álbum?",
-        "respostas": ["1987", "1991"],
-        "correta": "1987"
-      },
-      {
-        "pergunta": "Qual banda lançou o álbum 'The Joshua Tree'?",
-        "respostas": ["U2", "Coldplay"],
-        "correta": "U2"
+        "id": 2,
+        "pergunta": "Qual é o benefício do seguro de saúde público na Alemanha?",
+        "opcoes": [
+          {
+            "id": 1,
+            "texto": "Cobre apenas acidentes de trabalho",
+            "correta": false
+          },
+          {
+            "id": 2,
+            "texto": "Cobre tratamentos médicos e hospitalares",
+            "correta": true
+          },
+          {
+            "id": 3,
+            "texto": "É apenas para aposentados",
+            "correta": false
+          },
+          {
+            "id": 4,
+            "texto": "Cobre apenas emergências",
+            "correta": false
+          }
+        ]
       }
     ]
   }
-  
+}

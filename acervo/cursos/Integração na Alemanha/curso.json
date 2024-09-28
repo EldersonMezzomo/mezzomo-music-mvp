@@ -3,25 +3,26 @@
     "nome": "Integração na Alemanha",
     "estilo": "Rock",
     "descricao": "Descrição do curso.",
+    "idioma": "Português",
     "dataInicio": "2023-09-10",
     "aulas": 
     [
       {
         "id": 1,
         "nome": "Aula 1 - Apresentação",
-        "duracao": 300,
+        "duracao": 20,
         "arquivo": "001.mp3"
       },
       {
         "id": 2,
         "nome": "Aula 2 - Persistindo",
-        "duracao": 250,
+        "duracao": 20,
         "arquivo": "002.mp3"
       },
       {
         "id": 3,
         "nome": "Aula 3 - Conclusão",
-        "duracao": 320,
+        "duracao": 20,
         "arquivo": "003.mp3"
       }      
     ]

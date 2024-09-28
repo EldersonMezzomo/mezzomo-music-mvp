@@ -1,50 +1,53 @@
+<!-- TelaInicio.vue -->
 <template>
   <div class="inicio">
-    <!-- Componente de Background -->
-    <MainBackground />
 
     <!-- Cabeçalho -->
     <header class="header">
-      <div class="icon perfil" @click="tooltip('Configurações em breve.')">
-        <i class="fas fa-user-circle"></i>
-      </div>
-      <h1 class="title">
-        <span class="mezzomo">mezzomo </span>
-        <span class="music">music</span>
-      </h1>
-      <div class="icon busca" @click="tooltip('Busca em breve.')">
-        <i class="fas fa-search"></i>
+      <div class="header-container">
+        <div class="icon perfil" @click="tooltip('Configurações em breve.')">
+          <i class="fa-solid fa-circle-user"></i>
+        </div>
+        <h1 class="title">
+          <span class="mezzomo">mezzomo </span>
+          <span class="music">music</span>
+        </h1>
+        <div class="icon busca" @click="tooltip('Busca em breve.')">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
       </div>
     </header>
 
-    <!-- Carrossel de Meus Cursos -->
-    <MainCarrossel v-if="cursos.length > 0" :items="cursos" titulo="Meus Cursos" @itemSelecionado="abrirCurso" />
+    <!-- Conteúdo Principal -->
+    <div class="main-content">
+      
+      <!-- Carrossel de Meus Cursos -->
+      <MainCarrossel v-if="cursos.length > 0" :items="cursos" titulo="Meus Cursos" @itemSelecionado="abrirCurso" />
 
-    <!-- Carrossel de Conheça os Cursos (se não houver cursos dinâmicos) -->
-    <MainCarrossel v-else :items="cursosSugeridos" titulo="Conheça os Cursos" @itemSelecionado="tooltip" />
+      <!-- Carrossel de Conheça os Cursos (se não houver cursos dinâmicos) -->
+      <MainCarrossel v-else :items="cursosSugeridos" titulo="Conheça os Cursos" @itemSelecionado="tooltip" />
 
-    <!-- Carrossel de Minhas Trilhas -->
-    <MainCarrossel v-if="trilhas.length > 0" :items="trilhas" titulo="Minhas Trilhas" @itemSelecionado="abrirTrilha" />
+      <!-- Carrossel de Minhas Trilhas -->
+      <MainCarrossel v-if="trilhas.length > 0" :items="trilhas" titulo="Minhas Trilhas"
+        @itemSelecionado="abrirTrilha" />
 
-    <!-- Carrossel de Conheça as Trilhas -->
-    <MainCarrossel v-else :items="trilhasSugeridas" titulo="Conheça as Trilhas" @itemSelecionado="tooltip" />
+      <!-- Carrossel de Conheça as Trilhas -->
+      <MainCarrossel v-else :items="trilhasSugeridas" titulo="Conheça as Trilhas" @itemSelecionado="tooltip" />
 
-    <!-- Exibir erro se houver -->
-    <p v-if="error">{{ error }}</p>
+      <!-- Exibir erro se houver -->
+      <p v-if="error">{{ error }}</p>
+    </div>
   </div>
 </template>
 
 
 
 
-
 <script>
-import MainBackground from '@/components/MainBackground.vue';
 import MainCarrossel from '@/components/MainCarrossel.vue';
 
 export default {
   components: {
-    MainBackground,
     MainCarrossel
   },
   data() {
@@ -52,6 +55,8 @@ export default {
       cursos: [],
       trilhas: [],
       error: null,
+      // Cursos sugeridos comentados para implementação posterior
+      /*
       cursosSugeridos: [
         { id: 1, nome: "Curso de Inglês", capa: "/img/cursos/ingles.webp" },
         { id: 2, nome: "Curso de Alemão", capa: "/img/cursos/alemao.webp" }
@@ -59,16 +64,23 @@ export default {
       trilhasSugeridas: [
         { id: 1, nome: "Trilha de Alemão", capa: "/img/trilhas/alemao.webp" },
         { id: 2, nome: "Trilha de Inglês", capa: "/img/trilhas/ingles.webp" }
-      ]
+      ],
+      */
+      scrollTimeout: null
     };
   },
   created() {
     this.loadCursosTrilhas();
   },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  },
   methods: {
     async loadCursosTrilhas() {
       try {
-        // Carregar cursos dinamicamente a partir de 'acervo/cursos'
         const cursosResponse = await fetch('/acervo/cursos/cursos.json');
         if (!cursosResponse.ok) throw new Error('Falha ao carregar cursos');
 
@@ -76,10 +88,9 @@ export default {
         this.cursos = cursosList.map(curso => ({
           id: curso.id,
           nome: curso.nome,
-          capa: `/acervo/cursos/${curso.id}/cover.webp`
+          capa: `/acervo/cursos/${curso.id}/cover-130.webp`
         }));
 
-        // Carregar trilhas dinamicamente a partir de 'acervo/trilhas'
         const trilhasResponse = await fetch('/acervo/trilhas/trilhas.json');
         if (!trilhasResponse.ok) throw new Error('Falha ao carregar trilhas');
 
@@ -87,12 +98,25 @@ export default {
         this.trilhas = trilhasList.map(trilha => ({
           id: trilha.id,
           nome: trilha.nome,
-          // Agora, buscamos a imagem 'cover.webp' dentro da pasta de cada trilha
-          capa: `/acervo/trilhas/${trilha.nome}/cover.webp` // Usamos o nome da trilha como o nome da pasta
+          capa: `/acervo/trilhas/${trilha.nome}/cover-130.webp`
         }));
 
       } catch (err) {
         this.error = 'Erro ao carregar cursos e trilhas: ' + err.message;
+      }
+    },
+    handleScroll() {
+      const header = document.querySelector('.header');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+        if (this.scrollTimeout) {
+          clearTimeout(this.scrollTimeout);
+        }
+        this.scrollTimeout = setTimeout(() => {
+          header.classList.remove('scrolled');
+        }, 1500);
+      } else {
+        header.classList.remove('scrolled');
       }
     },
     tooltip(mensagem) {
@@ -111,93 +135,86 @@ export default {
 
 
 
-
 <style scoped>
 @import "@/assets/css/variables.css";
 
 .inicio {
-  padding: 0px var(--padding-lateral);
-  background-color: transparent;
-  color: var(--primary-color);
+  color: var(--color-primary);
 }
 
 .header {
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: var(--color-dark);
+  transition: background-color 0.3s, opacity 0.3s;
+}
+
+.header-container {
+  max-width: 1600px;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  border-bottom: 1px solid var(--secondary-color);
-  /* Adiciona a linha branca fina */
-  padding-bottom: 10px;
-  /* Adiciona espaço abaixo do conteúdo */
+  box-sizing: border-box;
+  padding: 0 calc(var(--padding-default) * 1.125); /* 45px */
+  height: calc(var(--padding-default) * 2); /* 80px */
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header.scrolled {
+  background-color: var(--color-dark);
+  opacity: 0.8;
 }
 
 .header .icon {
   cursor: pointer;
-  font-size: 24px;
-  color: var(--secondary-color);
+  font-size: var(--size-xlarge-2);
+  color: var(--color-secondary);
+  transition: color 0.3s ease;
+}
+
+.header .icon:hover {
+  color: var(--color-primary);
 }
 
 .header .title {
-  font-size: 28px;
-  font-weight: bold;
-  color: var(--primary-color);
+  color: var(--color-primary);
   display: flex;
-  align-items: center;
+  align-items: baseline;
 }
 
 .header .title .mezzomo {
   font-family: var(--font-oxygen);
+  font-size: var(--size-big-1);
 }
 
 .header .title .music {
   font-family: var(--font-nunito-sans);
-  font-size: 30px;
-  /* Ajuste este valor até que as fontes fiquem da mesma altura */
-  margin-left: 5px;
+  font-size: var(--size-big-2);
+  padding-left: 10px;
   font-weight: 300;
 }
 
-.section {
-  margin-bottom: 30px;
+.main-content {
+  padding-top: calc(var(--padding-default) * 2); /* 80px */
 }
 
-/* Media query para telas com largura abaixo de 480px */
+
+
+
+/* Mobile */
 @media (max-width: 480px) {
 
-  .header .icon {
-    font-size: 20px;
-  }
-
-  .header .title {
-    font-size: 20px;
-    /* Diminui o tamanho da fonte do título */
-  }
-
   .header .title .music {
-    font-size: 22px;
-    /* Ajuste proporcional para manter o design */
-  }
-
-  .inicio {
-    padding: 0 10px;
-    /* Reduz a distância lateral em telas menores */
-  }
-
-  .carousel .item {
-    width: 80px;
-    /* Diminui a largura dos itens (capas) no carrossel */
-  }
-
-  .carousel .item p {
-    font-size: 12px;
-    /* Diminui o tamanho da fonte dos nomes dos cursos/trilhas */
-  }
-
-  .carousel {
-    gap: 10px;
-    /* Ajusta o espaçamento entre os itens do carrossel */
+    padding-left: 5px;
   }
 }
 </style>

@@ -1,77 +1,83 @@
 <template>
   <div class="tela-curso">
-    <!-- Botão Voltar -->
-    <button class="btn-voltar" @click="voltar">
-      <i class="fas fa-arrow-left"></i> Voltar
-    </button>
 
-    <!-- Detalhes do Curso -->
-    <div class="curso-detalhes">
-      <!-- Capa do Curso com Botão "Adicionar à Minha Trilha" -->
-      <div class="curso-capa">
-        <img :src="curso.capa" :alt="curso.nome" class="capa-img" />
-        <button class="btn-adicionar-trilha" @click="adicionarATrilha">
-          <i class="fas fa-plus"></i>
+    <!-- Cabeçalho fixo -->
+    <header class="header">
+      <div class="header-container">
+        <button class="btn-voltar" @click="voltar">
+          <i class="fa-solid fa-arrow-left"></i> Voltar
         </button>
-      </div>
-
-      <!-- Informações do Curso -->
-      <div class="curso-info">
         <h1 class="curso-nome">{{ curso.nome }}</h1>
-        <p class="curso-estilo">{{ curso.estilo }}</p>
-        <p class="curso-idioma">Idioma: {{ curso.idioma }}</p> <!-- Novo campo de idioma -->
-        <p class="curso-descricao">{{ curso.descricao }}</p>
-        <p class="curso-duracao">Duração total: {{ duracaoTotal }}</p>
-        <p class="curso-data-inicio" v-if="curso.dataInicio">
-          Iniciado em: {{ curso.dataInicio }}
-        </p>
+      </div>
+    </header>
 
-        <!-- Botões de Ação -->
-        <div class="curso-acoes">
-          <div class="curso-acao" @click="baixarAudios">
-            <i class="fas fa-download"></i>
-            <span>Download</span>
-          </div>
-          <div class="curso-acao" @click="compartilharCurso">
-            <i class="fas fa-share-alt"></i>
-            <span>Compartilhar</span>
-          </div>
-          <div class="curso-acao" @click="rolarParaComentarios">
-            <i class="fas fa-comments"></i>
-            <span>Comentários</span>
-          </div>
-          <div class="curso-acao" @click="acessarCertificado" :disabled="!certificadoDisponivel">
-            <i class="fas fa-flag-checkered"></i> <!-- Ícone de bandeira quadriculada -->
-            <span>Certificado</span>
-          </div>
-          <div class="curso-acao" @click="acessarQuiz">
-            <i class="fas fa-question-circle"></i>
-            <span>Quiz</span>
+    <!-- Conteúdo Principal -->
+    <div class="main-content">
+
+      <!-- Detalhes do Curso -->
+      <div class="curso-detalhes">
+        <div class="curso-capa">
+          <img :src="curso.capa" :alt="curso.nome" class="capa-img" />
+        </div>
+
+        <!-- Informações do Curso -->
+        <div class="curso-info">
+          <p class="curso-descricao">{{ curso.descricao }}<button class="btn-adicionar-trilha"
+              @click="adicionarATrilha">
+              <i class="fa-solid fa-plus"></i>
+            </button></p>
+          <p class="curso-estilo">Estilo: <span class="italico">{{ curso.estilo }}</span></p>
+          <p class="curso-idioma">Idioma: <span class="italico">{{ curso.idioma }}</span></p>
+          <p class="curso-duracao">Duração total: <span class="italico">{{ duracaoTotal }}</span></p>
+          <p class="curso-data-inicio" v-if="curso.dataInicio">Iniciado em: <span class="italico">{{ curso.dataInicio
+              }}</span></p>
+
+          <!-- Botões de Ação -->
+          <div class="curso-acoes">
+            <div class="curso-acao" @click="baixarAudios">
+              <i class="fa-solid fa-download"></i>
+              <span>Download</span>
+            </div>
+            <div class="curso-acao" @click="compartilharCurso">
+              <i class="fa-solid fa-share-nodes"></i>
+              <span>Compartilhar</span>
+            </div>
+            <div class="curso-acao" @click="rolarParaComentarios">
+              <i class="fa-solid fa-comments"></i>
+              <span>Comentários</span>
+            </div>
+            <div class="curso-acao" @click="acessarCertificado" :disabled="!certificadoDisponivel">
+              <i class="fa-solid fa-flag-checkered"></i>
+              <span>Certificado</span>
+            </div>
+            <div class="curso-acao" @click="acessarQuiz">
+              <i class="fa-solid fa-circle-question"></i>
+              <span>Quiz</span>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- Lista de Aulas -->
+      <div class="curso-aulas">
+        <h2>Aulas</h2>
+        <ul>
+          <li v-for="aula in curso.aulas" :key="aula.id" @click="tocarAula(aula)">
+            <div class="aula-detalhes">
+              <i class="fa-solid fa-play"></i>
+              <span>{{ aula.nome }}</span>
+
+            </div>
+            <div class="aula-duracao">
+              <span>{{ formatarDuracao(aula.duracao) }}</span>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
-
-    <!-- Lista de Aulas -->
-    <div class="curso-aulas">
-      <h2>Aulas</h2>
-      <ul>
-        <li v-for="(aula, index) in curso.aulas" :key="aula.id" @click="tocarAula(aula)">
-          <div class="aula-detalhes">
-            <i class="fas fa-play"></i>
-            <span>{{ index + 1 }}. {{ aula.nome }}</span>
-          </div>
-          <div class="aula-duracao">
-            <span>{{ formatarDuracao(aula.duracao) }}</span>
-          </div>
-        </li>
-      </ul>
-    </div>
-
-
-    <!-- Sessão de Comentários (a ser implementada posteriormente) -->
   </div>
 </template>
+
 
 
 
@@ -90,18 +96,22 @@ export default {
       },
       duracaoTotal: '0h 0min',
       certificadoDisponivel: false,
+      scrollTimeout: null,
+      cursoAdicionado: false,
     };
   },
   created() {
     this.carregarCurso();
   },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  },
   methods: {
-    voltar() {
-      this.$router.go(-1);
-    },
     async carregarCurso() {
       try {
-        // Carregar dados do curso a partir de um JSON
         const response = await fetch(`/acervo/cursos/${this.curso.id}/curso.json`);
         if (!response.ok) throw new Error('Falha ao carregar o curso');
 
@@ -117,7 +127,7 @@ export default {
         this.curso.aulas = dadosCurso.aulas.map((aula, index) => ({
           id: aula.id || index + 1,
           nome: aula.nome,
-          duracao: aula.duracao, // duração em segundos
+          duracao: aula.duracao,
           reproduzida: aula.reproduzida || false,
           baixada: aula.baixada || false,
           arquivo: `/acervo/cursos/${this.curso.id}/${aula.arquivo}`,
@@ -141,8 +151,30 @@ export default {
     verificarCertificadoDisponivel() {
       this.certificadoDisponivel = false;
     },
+    handleScroll() {
+      const header = document.querySelector('.header');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+        if (this.scrollTimeout) {
+          clearTimeout(this.scrollTimeout);
+        }
+        this.scrollTimeout = setTimeout(() => {
+          header.classList.remove('scrolled');
+        }, 1500);
+      } else {
+        header.classList.remove('scrolled');
+      }
+    },
+    voltar() {
+      this.$router.push({ name: 'TelaInicio' });
+    },
     adicionarATrilha() {
-      alert('Curso adicionado à Minha Trilha!');
+      this.cursoAdicionado = !this.cursoAdicionado;
+      if (this.cursoAdicionado) {
+        alert('Curso adicionado à Minha Trilha!');
+      } else {
+        alert('Curso removido da Minha Trilha!');
+      }
     },
     baixarAudios() {
       alert('Download iniciado para todos os áudios do curso.');
@@ -187,34 +219,70 @@ export default {
 @import "@/assets/css/variables.css";
 
 .tela-curso {
-  padding: 20px var(--padding-lateral);
-  color: var(--secondary-color);
+  color: var(--color-secondary);
 }
 
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: var(--color-dark);
+  height: calc(var(--padding-default) * 2); /* 80px */
+  box-sizing: border-box;
+  transition: background-color 0.3s, opacity 0.3s;
+}
+
+.header.scrolled {
+  background-color: var(--color-dark);
+  opacity: 0.8;
+}
+
+.header-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 0 calc(var(--padding-default) * 1.125); /* 45px */
+  height: calc(var(--padding-default) * 2); /* 80px */
+}
+
+.main-content {
+  padding-top: calc(var(--padding-default) * 2); /* 80px de espaçamento */
+}
+
+
 .btn-voltar {
+  position: absolute;
+  left: 0;
+  font-family: var(--font-nunito-sans);
+  font-size: var(--size-xlarge-2);
   background: none;
   border: none;
-  color: var(--secondary-color);
-  font-size: 18px;
+  color: var(--color-secondary);
   cursor: pointer;
-  margin-bottom: 20px;
+  padding: 0 calc(var(--padding-default) * 1.125); /* 45px */
 }
 
 .btn-voltar:hover {
-  color: var(--primary-color);
-  /* Muda para a cor vermelha ao passar o mouse */
+  color: var(--color-primary);
 }
 
 .curso-detalhes {
   display: flex;
   flex-wrap: wrap;
-  margin: 30px 0;
-  background-color: var(--background-color-transp-black);
-  height: 350px;
+  background-color: rgba(var(--color-dark-rgb), 0.4);
+  margin: calc(var(--padding-default) * 0.75); /* 30px */
+  padding: calc(var(--padding-default) * 0.375); /* 15px */
+  border-radius: 10px;
 }
 
 .curso-capa {
   position: relative;
+  margin: 0 calc(var(--padding-default) * 0.75) calc(var(--padding-default) * 0.75) 0; /* 30px */
 }
 
 .capa-img {
@@ -223,62 +291,66 @@ export default {
   border-radius: 10px;
 }
 
-.btn-adicionar-trilha {
-  position: absolute;
-  bottom: 60px;
-  right: 10px;
-  background-color: var(--primary-color);
-  border: none;
-  color: var(--secondary-color);
-  font-size: 18px;
-  padding: 10px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
 .curso-info {
-  flex: 1;
-  margin-left: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .curso-nome {
   font-family: var(--font-oxygen);
-  font-size: 28px;
-  color: var(--primary-color);
-  margin-bottom: 10px;
-}
-
-.curso-estilo {
-  font-size: 18px;
-  font-style: italic;
-  margin-bottom: 10px;
+  font-size: var(--size-big-1);
+  color: var(--color-primary);
 }
 
 .curso-descricao {
+  font-family: var(--font-oxygen);
+  font-size: var(--size-xlarge-2);
   margin-bottom: 10px;
+  font-weight: bold;
 }
 
+.btn-adicionar-trilha {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  cursor: pointer;
+  font-size: var(--size-xlarge-2);
+  margin-left: 10px;
+}
+
+
+.btn-adicionar-trilha:hover {
+  color: var(--color-secondary);
+}
+
+.curso-estilo,
+.curso-idioma,
 .curso-duracao,
 .curso-data-inicio {
-  margin-bottom: 5px;
+  font-size: var(--size-large-1);
+}
+
+.italico {
+  font-style: italic;
 }
 
 .curso-acoes {
   display: flex;
   margin-top: 20px;
-  gap: 40px;
+  gap: 50px;
 }
 
 .curso-acao {
   text-align: center;
   cursor: pointer;
-  color: var(--secondary-color);
-  font-size: 16px;
+  color: var(--color-secondary);
+  font-size: var(--size-large-1);
   transition: color 0.3s;
 }
 
 .curso-acao i {
-  font-size: 24px;
+  font-size: var(--size-xlarge-2);
   display: block;
 }
 
@@ -288,27 +360,27 @@ export default {
 }
 
 .curso-acao:hover {
-  color: var(--primary-color);
-  /* Torna o ícone e o texto vermelhos ao passar o mouse */
+  color: var(--color-primary);
 }
 
-
 .curso-aulas {
-  margin-bottom: 30px;
-  margin-top: 50px;
-  background-color: var(--background-color-transp-black);
+  background-color: rgba(var(--color-dark-rgb), 0.4);
+  margin: calc(var(--padding-default) * 0.75); /* 30px */
+  padding: calc(var(--padding-default) * 0.375); /* 15px */
+  border-radius: 10px;
 }
 
 .curso-aulas h2 {
   font-family: var(--font-oxygen);
-  font-size: 24px;
-  color: var(--secondary-color);
+  font-size: var(--size-xlarge-2);
+  color: var(--color-secondary);
   margin-bottom: 15px;
 }
 
 .curso-aulas ul {
   list-style: none;
   padding: 0;
+  font-size: var(--size-large-1);
 }
 
 .curso-aulas li {
@@ -316,20 +388,19 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(var(--color-secondary-rgb), 0.1);
   margin-bottom: 10px;
   border-radius: 5px;
   cursor: pointer;
+  border: 2px solid transparent;
 }
 
 .curso-aulas li:hover {
-  border: 2px solid var(--primary-color);
-  /* Borda vermelha ao passar o mouse */
+  border: 2px solid var(--color-primary);
 }
 
-
 .curso-aulas li.reproduzida {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(var(--color-secondary-rgb), 0.2);
 }
 
 .aula-detalhes {
@@ -341,23 +412,31 @@ export default {
   margin-right: 10px;
 }
 
-.aula-acoes i {
-  font-size: 20px;
-  cursor: pointer;
-}
-
 .aula-duracao {
-  font-size: 14px;
-  color: var(--secondary-color);
+  font-size: var(--size-large-1);
+  color: var(--color-secondary);
   text-align: right;
 }
 
 
 
 
+/* Tablet */
+@media (max-width: 768px) {
+
+  .curso-acoes {
+    gap: 20px;
+  }
+}
+
+
+
+
+/* Mobile */
 @media (max-width: 480px) {
-  .tela-curso {
-    padding: 10px;
+
+  .curso-nome {
+    display: none;
   }
 
   .curso-detalhes {
@@ -366,17 +445,16 @@ export default {
   }
 
   .curso-capa {
-    margin-bottom: 20px;
+    margin-right: 0;
   }
 
   .curso-info {
-    margin-left: 0;
     text-align: center;
   }
 
   .capa-img {
     width: 100%;
-    max-width: 300px;
+    max-width: 260px;
   }
 
   .curso-acoes {
@@ -388,16 +466,6 @@ export default {
   .curso-acao {
     margin-bottom: 10px;
     width: 80px;
-  }
-
-  .curso-aulas li {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .aula-acoes {
-    align-self: flex-end;
-    margin-top: 5px;
   }
 }
 </style>

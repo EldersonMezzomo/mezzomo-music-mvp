@@ -1,44 +1,33 @@
 <!-- AudioPlayer.vue -->
 <template>
   <div class="audio-player">
-    <!-- Hidden Audio Element -->
-    <audio
-      ref="audioElement"
-      :src="src"
-      @loadedmetadata="onLoadedMetadata"
-      @timeupdate="onTimeUpdate"
-      @play="onPlay"
-      @pause="onPause"
-      @ended="onEnded"
-    ></audio>
+    <audio ref="audioElement" :src="src" preload="auto" @loadedmetadata="onLoadedMetadata" @canplay="onCanPlay"
+      @timeupdate="onTimeUpdate" @play="onPlay" @pause="onPause" @ended="onEnded" @error="onError"></audio>
 
-    <!-- Controls -->
+    <!-- Controles -->
     <div class="controls">
-      <button @click="rewind" v-if="showRewind"><i class="fas fa-backward"></i></button>
+      <button @click="rewind" v-if="showRewind"><i class="fa-solid fa-backward-step"></i></button>
       <button @click="togglePlay">
-        <i :class="isPlaying ? 'fas fa-pause' : 'fas fa-play'"></i>
+        <i :class="isPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-play'"></i>
       </button>
-      <button @click="forward" v-if="showForward"><i class="fas fa-forward"></i></button>
+      <button @click="forward" v-if="showForward"><i class="fa-solid fa-forward-step"></i></button>
     </div>
 
-    <!-- Progress Bar -->
+    <!-- Barra de Progresso -->
     <div class="progress-container" v-if="showProgress">
-      <input
-        type="range"
-        min="0"
-        :max="duration"
-        v-model="currentTime"
-        @input="seek"
-      />
+      <input type="range" min="0" :max="duration" v-model="currentTime" @input="seek" />
     </div>
 
-    <!-- Times -->
+    <!-- Tempo -->
     <div class="time-container" v-if="showProgress">
       <span class="current-time">{{ formatTime(currentTime) }}</span>
       <span class="total-time">{{ formatTime(duration) }}</span>
     </div>
   </div>
 </template>
+
+
+
 
 <script>
 export default {
@@ -70,85 +59,79 @@ export default {
       isPlaying: false,
       duration: 0,
       currentTime: 0,
+      audioReady: false,
     };
   },
   mounted() {
     const audio = this.$refs.audioElement;
-
-    // Adicionar eventos
-    audio.addEventListener('loadedmetadata', this.onLoadedMetadata);
-    audio.addEventListener('timeupdate', this.onTimeUpdate);
-    audio.addEventListener('ended', this.onEnded);
-    audio.addEventListener('play', this.onPlay);
-    audio.addEventListener('pause', this.onPause);
-
-    // Iniciar reprodução se autoplay estiver habilitado
-    if (this.autoplay) {
-      audio.play().catch((error) => {
-        console.error('Erro ao tentar reproduzir o áudio:', error);
-      });
+    if (audio) {
+      audio.addEventListener('error', this.onError);
     }
   },
   beforeUnmount() {
     const audio = this.$refs.audioElement;
     if (audio) {
-      audio.removeEventListener('loadedmetadata', this.onLoadedMetadata);
-      audio.removeEventListener('timeupdate', this.onTimeUpdate);
-      audio.removeEventListener('ended', this.onEnded);
-      audio.removeEventListener('play', this.onPlay);
-      audio.removeEventListener('pause', this.onPause);
+      audio.removeEventListener('error', this.onError);
     }
   },
   methods: {
+    onCanPlay() {
+      this.audioReady = true;
+      if (this.autoplay) {
+        this.playAudio();
+      }
+    },
     onLoadedMetadata() {
       const audio = this.$refs.audioElement;
-      if (!audio) return;
-      this.duration = Math.floor(audio.duration);
+      if (audio) {
+        this.duration = Math.floor(audio.duration);
+      }
     },
     onTimeUpdate() {
       const audio = this.$refs.audioElement;
-      if (!audio) return;
-      this.currentTime = audio.currentTime;
-      // Emitir o currentTime para o componente pai
-      this.$emit('timeupdate', this.currentTime);
+      if (audio) {
+        this.currentTime = audio.currentTime;
+        this.$emit('timeupdate', this.currentTime);
+      }
     },
     onPlay() {
-      const audio = this.$refs.audioElement;
-      if (!audio) return;
       this.isPlaying = true;
       this.$emit('play');
     },
     onPause() {
-      const audio = this.$refs.audioElement;
-      if (!audio) return;
       this.isPlaying = false;
       this.$emit('pause');
     },
     togglePlay() {
-      this.isPlaying ? this.pauseAudio() : this.playAudio();
+      if (this.audioReady) {
+        this.isPlaying ? this.pauseAudio() : this.playAudio();
+      } else {
+        console.warn('O áudio ainda não está pronto para ser reproduzido.');
+      }
     },
     playAudio() {
       const audio = this.$refs.audioElement;
-      if (!audio) return;
-      audio.play().catch((error) => {
-        console.error('Erro ao tentar reproduzir o áudio:', error);
-      });
+      if (audio && this.audioReady) {
+        audio.play().catch((error) => {
+          console.error('Erro ao tentar reproduzir o áudio:', error);
+        });
+      }
     },
     pauseAudio() {
       const audio = this.$refs.audioElement;
-      if (!audio) return;
-      audio.pause();
+      if (audio) {
+        audio.pause();
+      }
     },
     seek(event) {
       const newTime = event.target.value;
       const audio = this.$refs.audioElement;
-      if (!audio) return;
-      audio.currentTime = newTime;
-      this.currentTime = newTime;
+      if (audio) {
+        audio.currentTime = newTime;
+        this.currentTime = newTime;
+      }
     },
     onEnded() {
-      const audio = this.$refs.audioElement;
-      if (!audio) return;
       this.isPlaying = false;
       this.$emit('ended');
     },
@@ -158,6 +141,9 @@ export default {
     forward() {
       this.$emit('forward');
     },
+    onError(error) {
+      console.error('Erro ao carregar ou reproduzir o áudio:', error);
+    },
     formatTime(seconds) {
       const minutes = Math.floor(seconds / 60);
       const secondsRemaining = Math.floor(seconds % 60);
@@ -165,25 +151,23 @@ export default {
     },
   },
   watch: {
-    src() {
+    src(newSrc) {
       const audio = this.$refs.audioElement;
-      if (!audio) return;
-      audio.src = this.src;
-      audio.load();
-      // Reiniciar os estados
-      this.isPlaying = false;
-      this.duration = 0;
-      this.currentTime = 0;
-      // Iniciar reprodução se autoplay estiver habilitado
-      if (this.autoplay) {
-        audio.play().catch((error) => {
-          console.error('Erro ao tentar reproduzir o áudio:', error);
-        });
+      if (audio) {
+        audio.src = newSrc;
+        audio.load();
+        this.isPlaying = false;
+        this.duration = 0;
+        this.currentTime = 0;
+        this.audioReady = false;
       }
     },
   },
 };
 </script>
+
+
+
 
 <style scoped>
 @import "@/assets/css/variables.css";
@@ -202,21 +186,21 @@ export default {
 .controls button {
   background: none;
   border: none;
-  color: var(--secondary-color);
-  font-size: 24px;
+  color: var(--color-secondary);
+  font-size: var(--size-large-1);
   margin: 0 20px;
   cursor: pointer;
 }
 
 .controls button:hover {
-  color: var(--primary-color);
+  color: var(--color-primary);
 }
 
 .controls button:nth-child(2) {
-  background-color: rgba(255, 255, 255, 0.2); /* Fundo transparente */
-  border-radius: 50%; /* Forma circular */
-  width: 60px; /* Largura do círculo */
-  height: 60px; /* Altura do círculo */
+  background-color: rgba(var(--color-secondary-rgb), 0.2);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -224,17 +208,12 @@ export default {
 }
 
 .controls button:nth-child(2):hover {
-  background-color: rgba(255, 255, 255, 0.4); /* Fundo ao passar o mouse */
+  background-color: rgba(var(--color-secondary-rgb), 0.4);
 }
 
 .progress-container {
   width: 100%;
   margin-top: 10px;
-}
-
-.progress-container input[type='range'] {
-  width: 100%;
-  margin: 0;
 }
 
 .time-container {
@@ -246,7 +225,63 @@ export default {
 
 .current-time,
 .total-time {
-  color: var(--primary-color);
-  font-size: 12px;
+  color: var(--color-primary);
+  font-size: var(--size-small-3);
+}
+
+.progress-container input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background-color: var(--color-secondary);
+  border-radius: 5px;
+  outline: none;
+  transition: background 0.3s ease;
+}
+
+.progress-container input[type='range']::-webkit-slider-runnable-track {
+  background-color: var(--color-secondary);
+  height: 6px;
+  border-radius: 5px;
+}
+
+.progress-container input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background-color: var(--color-primary);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.progress-container input[type='range']::-moz-range-track {
+  background-color: var(--color-secondary);
+  height: 6px;
+  border-radius: 5px;
+}
+
+.progress-container input[type='range']::-moz-range-progress {
+  background-color: var(--color-primary);
+  height: 6px;
+  border-radius: 5px;
+}
+
+.progress-container input[type='range']::-ms-track {
+  background-color: transparent;
+  border-color: transparent;
+  color: transparent;
+  height: 6px;
+}
+
+.progress-container input[type='range']::-ms-fill-lower {
+  background-color: var(--color-primary);
+}
+
+.progress-container input[type='range']::-ms-fill-upper {
+  background-color: var(--color-secondary);
 }
 </style>

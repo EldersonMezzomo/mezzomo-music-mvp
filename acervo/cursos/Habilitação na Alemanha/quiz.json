@@ -1,21 +1,59 @@
 {
-    "curso": "The Joshua Tree",
-    "quiz": [
+  "quiz": {
+    "curso": "Habilitação na Alemanha",
+    "perguntas": [
       {
-        "pergunta": "Qual o nome da primeira faixa do álbum?",
-        "respostas": ["With or Without You", "Where the Streets Have No Name"],
-        "correta": "Where the Streets Have No Name"
+        "id": 1,
+        "pergunta": "Qual é o limite de velocidade em uma estrada urbana?",
+        "opcoes": [
+          {
+            "id": 1,
+            "texto": "50 km/h",
+            "correta": true
+          },
+          {
+            "id": 2,
+            "texto": "100 km/h",
+            "correta": false
+          },
+          {
+            "id": 3,
+            "texto": "70 km/h",
+            "correta": false
+          },
+          {
+            "id": 4,
+            "texto": "30 km/h",
+            "correta": false
+          }
+        ]
       },
       {
-        "pergunta": "Qual o ano de lançamento do álbum?",
-        "respostas": ["1987", "1991"],
-        "correta": "1987"
-      },
-      {
-        "pergunta": "Qual banda lançou o álbum 'The Joshua Tree'?",
-        "respostas": ["U2", "Coldplay"],
-        "correta": "U2"
+        "id": 2,
+        "pergunta": "O que significa um sinal triangular com bordas vermelhas e um ponto de exclamação no centro?",
+        "opcoes": [
+          {
+            "id": 1,
+            "texto": "Ponto de controle policial",
+            "correta": false
+          },
+          {
+            "id": 2,
+            "texto": "Aviso de perigo",
+            "correta": true
+          },
+          {
+            "id": 3,
+            "texto": "Curva perigosa",
+            "correta": false
+          },
+          {
+            "id": 4,
+            "texto": "Semáforo à frente",
+            "correta": false
+          }
+        ]
       }
     ]
   }
-  
+}

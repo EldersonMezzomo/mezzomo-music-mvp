@@ -1,21 +1,59 @@
 {
-    "curso": "The Joshua Tree",
-    "quiz": [
+  "quiz": {
+    "curso": "Metodologia Científica",
+    "perguntas": [
       {
-        "pergunta": "Qual o nome da primeira faixa do álbum?",
-        "respostas": ["With or Without You", "Where the Streets Have No Name"],
-        "correta": "Where the Streets Have No Name"
+        "id": 1,
+        "pergunta": "O que é uma hipótese científica?",
+        "opcoes": [
+          {
+            "id": 1,
+            "texto": "Uma suposição sem base",
+            "correta": false
+          },
+          {
+            "id": 2,
+            "texto": "Uma explicação provisória para um fenômeno",
+            "correta": true
+          },
+          {
+            "id": 3,
+            "texto": "Uma lei imutável",
+            "correta": false
+          },
+          {
+            "id": 4,
+            "texto": "Uma observação registrada",
+            "correta": false
+          }
+        ]
       },
       {
-        "pergunta": "Qual o ano de lançamento do álbum?",
-        "respostas": ["1987", "1991"],
-        "correta": "1987"
-      },
-      {
-        "pergunta": "Qual banda lançou o álbum 'The Joshua Tree'?",
-        "respostas": ["U2", "Coldplay"],
-        "correta": "U2"
+        "id": 2,
+        "pergunta": "Qual desses é um método comum em pesquisas científicas?",
+        "opcoes": [
+          {
+            "id": 1,
+            "texto": "Método dedutivo",
+            "correta": true
+          },
+          {
+            "id": 2,
+            "texto": "Análise de opinião",
+            "correta": false
+          },
+          {
+            "id": 3,
+            "texto": "Palpite educado",
+            "correta": false
+          },
+          {
+            "id": 4,
+            "texto": "Especulação teórica",
+            "correta": false
+          }
+        ]
       }
     ]
   }
-  
+}

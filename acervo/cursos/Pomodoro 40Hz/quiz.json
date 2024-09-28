@@ -1,21 +1,59 @@
 {
-    "curso": "The Joshua Tree",
-    "quiz": [
+  "quiz": {
+    "curso": "Pomodoro 40Hz",
+    "perguntas": [
       {
-        "pergunta": "Qual o nome da primeira faixa do álbum?",
-        "respostas": ["With or Without You", "Where the Streets Have No Name"],
-        "correta": "Where the Streets Have No Name"
+        "id": 1,
+        "pergunta": "Qual é a duração de uma sessão completa da técnica Pomodoro?",
+        "opcoes": [
+          {
+            "id": 1,
+            "texto": "30 minutos de trabalho e 10 de descanso",
+            "correta": false
+          },
+          {
+            "id": 2,
+            "texto": "25 minutos de trabalho e 5 de descanso",
+            "correta": true
+          },
+          {
+            "id": 3,
+            "texto": "50 minutos de trabalho e 10 de descanso",
+            "correta": false
+          },
+          {
+            "id": 4,
+            "texto": "60 minutos de trabalho sem pausa",
+            "correta": false
+          }
+        ]
       },
       {
-        "pergunta": "Qual o ano de lançamento do álbum?",
-        "respostas": ["1987", "1991"],
-        "correta": "1987"
-      },
-      {
-        "pergunta": "Qual banda lançou o álbum 'The Joshua Tree'?",
-        "respostas": ["U2", "Coldplay"],
-        "correta": "U2"
+        "id": 2,
+        "pergunta": "Qual a principal vantagem do uso de 40Hz binaural para concentração?",
+        "opcoes": [
+          {
+            "id": 1,
+            "texto": "Aumenta a memória de curto prazo",
+            "correta": false
+          },
+          {
+            "id": 2,
+            "texto": "Melhora o foco e a atenção",
+            "correta": true
+          },
+          {
+            "id": 3,
+            "texto": "Reduz a necessidade de descanso",
+            "correta": false
+          },
+          {
+            "id": 4,
+            "texto": "Aumenta a quantidade de sono profundo",
+            "correta": false
+          }
+        ]
       }
     ]
   }
-  
+}

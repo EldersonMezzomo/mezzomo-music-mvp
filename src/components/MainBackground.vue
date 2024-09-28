@@ -1,8 +1,12 @@
+<!-- MainBackground.vue -->
 <template>
   <div class="background">
     <div class="blurred-spots" v-for="n in 5" :key="n"></div>
   </div>
 </template>
+
+
+
 
 <script>
 export default {
@@ -10,9 +14,11 @@ export default {
 };
 </script>
 
+
+
+
 <style scoped>
 @import "@/assets/css/variables.css";
-/* Importando variáveis CSS */
 
 .background {
   position: fixed;
@@ -20,21 +26,19 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: var(--background-color);
-  /* Usando a variável para cor de fundo */
+  background-color: var(--color-dark);
   overflow: hidden;
   z-index: -1;
-  /* Para que o background fique atrás de todo o conteúdo */
 }
 
 .blurred-spots {
   position: absolute;
   width: 300px;
   height: 300px;
-  background: rgba(var(--primary-color-rgb), 0.15);
+  background: rgba(var(--color-primary-rgb), 0.15);
   border-radius: 50%;
   filter: blur(150px);
-  animation: move-spots 30s infinite alternate ease-in-out;
+  animation: move-spots 9s infinite alternate ease-in-out;
 }
 
 /* Posicionando as manchas em diferentes locais da tela */

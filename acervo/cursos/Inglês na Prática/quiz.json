@@ -1,21 +1,59 @@
 {
-    "curso": "The Joshua Tree",
-    "quiz": [
+  "quiz": {
+    "curso": "Inglês na Prática",
+    "perguntas": [
       {
-        "pergunta": "Qual o nome da primeira faixa do álbum?",
-        "respostas": ["With or Without You", "Where the Streets Have No Name"],
-        "correta": "Where the Streets Have No Name"
+        "id": 1,
+        "pergunta": "Qual é a tradução de 'I am going to the store'?",
+        "opcoes": [
+          {
+            "id": 1,
+            "texto": "Eu estou indo à escola",
+            "correta": false
+          },
+          {
+            "id": 2,
+            "texto": "Eu vou à loja",
+            "correta": true
+          },
+          {
+            "id": 3,
+            "texto": "Eu estou comendo na loja",
+            "correta": false
+          },
+          {
+            "id": 4,
+            "texto": "Eu estou comprando um carro",
+            "correta": false
+          }
+        ]
       },
       {
-        "pergunta": "Qual o ano de lançamento do álbum?",
-        "respostas": ["1987", "1991"],
-        "correta": "1987"
-      },
-      {
-        "pergunta": "Qual banda lançou o álbum 'The Joshua Tree'?",
-        "respostas": ["U2", "Coldplay"],
-        "correta": "U2"
+        "id": 2,
+        "pergunta": "Qual dessas palavras é um verbo regular em inglês?",
+        "opcoes": [
+          {
+            "id": 1,
+            "texto": "Eat",
+            "correta": false
+          },
+          {
+            "id": 2,
+            "texto": "Run",
+            "correta": false
+          },
+          {
+            "id": 3,
+            "texto": "Talk",
+            "correta": true
+          },
+          {
+            "id": 4,
+            "texto": "Write",
+            "correta": false
+          }
+        ]
       }
     ]
   }
-  
+}

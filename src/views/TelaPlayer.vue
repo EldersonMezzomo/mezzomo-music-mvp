@@ -1,19 +1,21 @@
 <!-- TelaPlayer.vue -->
 <template>
   <div class="tela-player">
+
     <!-- Cabeçalho -->
     <div class="player-header">
       <button class="btn-voltar" @click="voltar">
-        <i class="fas fa-arrow-left"></i> Voltar
+        <i class="fa-solid fa-arrow-left"></i> Voltar
       </button>
       <button class="btn-favoritar" @click="toggleFavorito">
-        <i :class="aula.favorito ? 'fas fa-star' : 'far fa-star'"></i>
+        <i :class="['fa-solid fa-star', aula.favorito ? 'favorito-ativo' : '']"></i>
       </button>
     </div>
 
-    <!-- Sessão de Exibição da Capa ou Letra -->
+    <!-- Exibição da Capa ou Letra -->
     <div class="media-section">
       <img v-if="mostrarCapa" :src="curso.capa" :alt="curso.nome" class="capa-img" />
+      
       <!-- Exibição das Letras -->
       <div v-else class="exibir-letra">
         <div class="letras-container">
@@ -28,40 +30,30 @@
 
     <!-- Rodapé: Controles de áudio e informações -->
     <div class="player-footer">
+      
       <!-- Primeira linha: Nome da faixa e botão de alternar letra -->
-      <div class="info-line">
+      <div class="info-line info-line-1">
         <span class="aula-nome">{{ aula.nome }}</span>
         <button class="btn-ver-letra" @click="toggleLetra">
-          <i class="fas fa-music"></i> Ver Letra
+          <i :class="mostrarCapa ? 'fa-solid fa-file-lines' : 'fa-solid fa-image'"></i>
+          <span>{{ mostrarCapa ? ' Ver Letra' : ' Ver Capa' }}</span>
         </button>
       </div>
+
       <!-- Segunda linha: Nome do curso -->
       <div class="info-line">
         <span class="curso-nome">{{ curso.nome }}</span>
         <button class="btn-repeat" @click="toggleRepeat">
-          <i :class="repeat ? 'fas fa-repeat' : 'fas fa-repeat'"></i>
+          <i :class="[repeat ? 'fa-solid fa-repeat repeat-active' : 'fa-solid fa-repeat']"></i>
         </button>
       </div>
 
       <!-- Barra de progresso e tempos -->
-      <AudioPlayer
-        ref="audioPlayer"
-        :src="aula.arquivo"
-        :autoplay="true"
-        :showRewind="true"
-        :showForward="true"
-        :showProgress="true"
-        @rewind="rewind"
-        @forward="forward"
-        @ended="onEnded"
-        @timeupdate="updateTime"
-      />
+      <AudioPlayer ref="audioPlayer" :src="aula.arquivo" :autoplay="true" :showRewind="true" :showForward="true"
+        :showProgress="true" @rewind="rewind" @forward="forward" @ended="onEnded" @timeupdate="updateTime" />
     </div>
   </div>
 </template>
-
-
-
 
 
 
@@ -77,7 +69,7 @@ export default {
   data() {
     return {
       mostrarCapa: true,
-      currentTime: 0, // Para sincronizar o tempo
+      currentTime: 0,
       curso: {
         nome: '',
         capa: '',
@@ -88,13 +80,13 @@ export default {
         arquivoLRC: '',
         favorito: false,
       },
-      letras: [], // Para armazenar as letras carregadas do arquivo LRC
-      linhaAtual: 0, // Índice da linha atual da letra
+      letras: [],
+      linhaAtual: 0,
       aulas: [],
       currentAulaIndex: 0,
       repeat: false,
-      scrollPosition: 0, // Controla a posição do scroll das letras
-      lineHeight: 40, // Altura total de cada linha (line-height + margin)
+      scrollPosition: 0,
+      lineHeight: 40,
     };
   },
   created() {
@@ -238,73 +230,81 @@ export default {
 
 
 
-
-
-
-
-
-
-
-
-
 <style scoped>
 @import "@/assets/css/variables.css";
 
 .tela-player {
+  max-width: 1600px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: calc(100vh - 40px);
-  width: calc(100vw - 40px);
+  height: 100vh;
+  width: 100vw;
   overflow: hidden;
-  padding: 20px;
   box-sizing: border-box;
 }
 
-/* Cabeçalho */
 .player-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  max-width: 1600px;
+  position: fixed;
+  top: 0;
   width: 100%;
-  padding: 10px;
-  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  background-color: var(--color-dark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0 calc(var(--padding-default) * 1.125); /* 45px */
+  height: calc(var(--padding-default) * 2); /* 80px */
 }
 
 .btn-voltar,
 .btn-favoritar {
+  position: absolute;
+  font-size: var(--size-xlarge-2);
   background: none;
   border: none;
-  color: var(--secondary-color);
-  font-size: 18px;
+  color: var(--color-secondary);
   cursor: pointer;
+  padding: 0 calc(var(--padding-default) * 0.75); /* 30px */
+}
+
+.btn-voltar {
+  font-family: var(--font-nunito-sans);
+  left: calc(var(--padding-default) * 0.375);
+}
+
+.btn-favoritar {
+  right: calc(var(--padding-default) * 0.375); /* 15px */
+}
+
+.favorito-ativo {
+  color: var(--color-primary);
 }
 
 .btn-voltar:hover,
 .btn-favoritar:hover {
-  color: var(--primary-color);
+  color: var(--color-primary);
 }
 
-/* Sessão do Meio: Capa ou Letra */
 .media-section {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 0 20px;
+  padding: calc(var(--padding-default) * 2) calc(var(--padding-default) * 0.5) 0; /* 80px 20px */
 }
 
-/* Capa da música */
 .capa-img {
   width: 100%;
   max-width: 300px;
   height: auto;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(var(--color-dark-rgb), 0.2);
 }
 
-/* Exibição da letra */
 .exibir-letra {
   width: 100%;
   display: flex;
@@ -314,9 +314,8 @@ export default {
 
 .letras-container {
   width: 100%;
-  max-width: 80%;
-  height: 280px; /* 7 linhas * 40px */
-  overflow: hidden; /* Esconde a barra de rolagem */
+  height: 280px;
+  overflow: hidden;
   position: relative;
 }
 
@@ -325,15 +324,15 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  color: var(--secondary-color);
+  color: var(--color-secondary);
   font-family: var(--font-nunito-sans);
-  font-size: 24px;
-  line-height: 40px; /* Deve ser consistente com lineHeight */
+  font-size: var(--size-large-3);
+  line-height: 40px;
   transition: transform 0.3s ease-in-out;
 }
 
 .letras p {
-  margin: 0; /* Ajuste para facilitar o cálculo da altura */
+  margin: 0;
   opacity: 0.5;
 }
 
@@ -342,36 +341,41 @@ export default {
   font-weight: bold;
 }
 
-
-/* Rodapé */
 .player-footer {
-  background-color: var(--background-color-transp-black);
-  padding: 10px;
+  max-width: 1600px;
+  background-color: rgba(var(--color-dark-rgb), 0.4);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 100%;
+  padding: calc(var(--padding-default) * 0.375) calc(var(--padding-default) * 1.125); /* 15px - 45px */
 }
 
 .info-line {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+}
+
+.info-line-1 {
   margin-bottom: 10px;
 }
 
 .aula-nome {
   font-family: var(--font-oxygen);
-  color: var(--secondary-color);
-  font-size: 28px;
+  font-size: var(--size-xlarge-2);
+  font-weight: bold;
+  color: var(--color-secondary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .curso-nome {
-  color: var(--secondary-color);
-  font-size: 16px;
+  color: var(--color-secondary);
+  font-size: var(--size-large-1);
+  opacity: 0.5;
+  font-style: italic;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -379,63 +383,57 @@ export default {
 
 .btn-ver-letra,
 .btn-repeat {
-  background-color: rgba(255, 255, 255, 0.2);
+  font-family: var(--font-nunito-sans);
+  font-size: var(-size-large-1);
+  background-color: rgba(var(--color-secondary-rgb), 0.2);
   border: none;
   padding: 8px 12px;
   border-radius: 15px;
-  color: white;
+  color: var(--color-secondary);
   cursor: pointer;
 }
 
 .btn-ver-letra:hover,
 .btn-repeat:hover {
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(var(--color-secondary-rgb), 0.5);
+  color: var(--color-primary);
+}
+
+.repeat-active {
+  color: var(--color-primary);
 }
 
 .controls {
   display: flex;
   justify-content: center;
-  margin-top: 10px;
 }
 
 .controls button {
   background: none;
   border: none;
-  color: var(--secondary-color);
-  font-size: 24px;
+  color: var(--color-secondary);
+  font-size: var(--size-large-3);
   margin: 0 10px;
   cursor: pointer;
 }
 
 .controls button:hover {
-  color: var(--primary-color);
+  color: var(--color-primary);
 }
 
-/* Ajustes para telas menores */
-@media (max-width: 768px) {
 
-  .btn-voltar,
-  .btn-favoritar {
-    font-size: 16px;
+
+
+/* Mobile */
+@media (max-width: 480px) {
+
+  .btn-ver-letra {
+    display: flex;
+    align-items: center;
   }
 
-  .capa-img {
-    max-width: 200px;
-  }
-
-  .aula-nome,
-  .curso-nome {
-    font-size: 14px;
-  }
-
-  .btn-ver-letra,
-  .btn-repeat {
-    padding: 6px 10px;
-  }
-
-  .controls button {
-    font-size: 20px;
+  .btn-ver-letra span {
+    display: none;
   }
 }
 </style>
-

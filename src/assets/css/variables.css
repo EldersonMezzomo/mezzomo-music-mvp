@@ -1,16 +1,94 @@
+/* CSS Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*::before, *::after {
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+
+/* variables.css */
+
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Oxygen:wght@300;400;700&display=swap');
 
-
 :root {
-  --primary-color: #FF2800;
-  --primary-color-rgb: 255, 40, 0;
-  --secondary-color: #ffffff;
-  --background-color: #000000;
-  --background-color-transp-black: rgba(0, 0, 0, 0.4);
-  --background-color-transp-gray: rgba(255, 255, 255, 0.09);
-  --padding-lateral: 40px;
 
-  /* Variáveis de fonte */
+  --color-primary: #FF2800;
+  --color-primary-rgb: 255, 40, 0;
+
+  --color-secondary: #FFFFFF;
+  --color-secondary-rgb: 255, 255, 255;
+
+  --color-highlight: #009246;
+  --color-highlight-rgb: 0, 146, 70;
+
+  --color-dark: #000000; /*#000000*/
+  --color-dark-rgb: 0, 0, 0;
+
+  --color-disabled: #303030;
+  --color-disabled-rgb: 48, 48, 48;
+
+
   --font-oxygen: 'Oxygen', sans-serif;
   --font-nunito-sans: 'Nunito Sans', sans-serif;
+
+
+  --padding-default: 40px;
+  /*
+  5px   => calc(var(--padding-default) * 0.125)
+  10px  => calc(var(--padding-default) * 0.25)
+  15px  => calc(var(--padding-default) * 0.375)
+  20px  => calc(var(--padding-default) / 2)
+  25px  => calc(var(--padding-default) * 0.625)
+  30px  => calc(var(--padding-default) * 0.75)
+  40px  => var(--padding-default)
+  45px  => calc(var(--padding-default) * 1.125)
+  80px  => calc(var(--padding-default) * 2)
+*/
+
+  --size-small-3: 0.75rem; /* 12px */
+  
+  --size-large-1: 1rem; /* 16px */
+  --size-large-2: 1.125rem; /* 18px */
+  --size-large-3: 1.25rem; /* 20px */
+
+  --size-xlarge-2: 1.5rem; /* 24px */
+  --size-xlarge-3: 1.625rem; /* 26px */
+
+  --size-big-1: 1.75rem; /* 28px */
+  --size-big-2: 1.875rem; /* 30px */
+}
+
+
+
+
+/* Tablet */
+@media (max-width: 768px) {
+  :root {
+
+    --padding-default: 30px;
+
+    --size-large-1: 0.875rem; /* 14px */
+    --size-xlarge-2: 1rem; /* 16px */
+    --size-big-1: 1.125rem; /* 18px */
+    --size-big-2: 1.25rem; /* 20px */
+  }
+}
+
+
+
+
+/* Mobile */
+@media (max-width: 480px) {
+  :root {
+
+    --padding-default: 25px;
+  }
 }

@@ -31,6 +31,5 @@ body {
 #app {
   max-width: 1600px;
   margin: 0 auto;
-  /* Centraliza o conteúdo horizontalmente */
-}
+  }
 </style>

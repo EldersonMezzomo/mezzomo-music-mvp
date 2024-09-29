@@ -1,12 +1,10 @@
 [
   {
-    "id": "Trilha de Alemão",
-    "nome": "Trilha de Alemão",
-    "capa": "Trilha de Alemão.webp"
+    "id": "trilha-de-alemao",
+    "nome": "Trilha de Alemão"
   },
   {
-    "id": "Trilha de Inglês",
-    "nome": "Trilha de Inglês",
-    "capa": "Trilha de Inglês.webp"
+    "id": "trilha-de-ingles",
+    "nome": "Trilha de Inglês"
   }
- ]
+]

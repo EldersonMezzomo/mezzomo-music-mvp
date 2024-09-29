@@ -1,0 +1,28 @@
+{
+  "id": "aprendendo-a-aprender",
+  "nome": "Aprendendo a Aprender",
+  "estilo": "Rock",
+  "descricao": "Descrição do curso.",
+  "idioma": "Português",
+  "dataInicio": "2023-09-10",
+  "aulas": [
+    {
+      "id": 1,
+      "nome": "Aula 1 - Apresentação",
+      "duracao": 20,
+      "arquivo": "001.mp3"
+    },
+    {
+      "id": 2,
+      "nome": "Aula 2 - Persistindo",
+      "duracao": 200,
+      "arquivo": "002.mp3"
+    },
+    {
+      "id": 3,
+      "nome": "Aula 3 - Conclusão",
+      "duracao": 20,
+      "arquivo": "003.mp3"
+    }
+  ]
+}

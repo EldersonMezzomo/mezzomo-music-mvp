@@ -98,7 +98,7 @@ export default {
         this.trilhas = trilhasList.map(trilha => ({
           id: trilha.id,
           nome: trilha.nome,
-          capa: `/acervo/trilhas/${trilha.nome}/cover-130.webp`
+          capa: `/acervo/trilhas/${trilha.id}/cover-130.webp`
         }));
 
       } catch (err) {

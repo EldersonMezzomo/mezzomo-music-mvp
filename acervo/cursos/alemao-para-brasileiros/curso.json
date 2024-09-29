@@ -1,0 +1,46 @@
+{
+  "id": "alemao-para-brasileiros",
+  "nome": "Alemão para Brasileiros",
+  "estilo": "Rock",
+  "descricao": "Curso de alemão com músicas de rock.",
+  "idioma": "Português",
+  "dataInicio": "2023-09-10",
+  "aulas": [
+    {
+      "id": 1,
+      "nome": "1. Introdução ao Alemão",
+      "duracao": 20,
+      "arquivo": "001.mp3"
+    },
+    {
+      "id": 2,
+      "nome": "2. Verbos Regulares",
+      "duracao": 20,
+      "arquivo": "002.mp3"
+    },
+    {
+      "id": 3,
+      "nome": "3. Conjugação de Verbos",
+      "duracao": 20,
+      "arquivo": "003.mp3"
+    },
+    {
+      "id": 4,
+      "nome": "4. Substantivos e Artigos",
+      "duracao": 20,
+      "arquivo": "004.mp3"
+    },
+    {
+      "id": 5,
+      "nome": "5. Pronomes Pessoais",
+      "duracao": 20,
+      "arquivo": "005.mp3"
+    },
+    {
+      "id": 6,
+      "nome": "6. Preposições Simples",
+      "duracao": 20,
+      "arquivo": "006.mp3"
+    }
+  ]
+}
